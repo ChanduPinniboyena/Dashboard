@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <img src="/Assests/6206351919270708222.jpg" alt="logo">
+                <h4>Guest</h4>
+            </div>
+            <div class="pair">
+                <i class="fa-solid fa-house-chimney"></i>
+                <a href="/dashboard">Dashboard</a>
+            </div>
+            
+            <h3>Class</h3>
+            <div class="pair">
+                <i class="fa fa-user-secret" aria-hidden="true"></i>
+                <a href="/attendance">Attendance</a>
+            </div>
+            <div class="pair">
+                <i class="fa-solid fa-calendar-days"></i>
+                <a href="/timetable">Time Table</a>
+            </div>
+            <div class="pair">
+                <i class="fa fa-book-open"></i>
+                <a href="/study-material">Study Material</a>
+            </div>
+    
+            <h3>College</h3>
+            <div class="pair">
+                <i class="fa fa-question"></i>
+                <a href="/student-request">Student Request</a>
+            </div>
+            <div class="pair">
+                <i class="fa fa-comments"></i>
+                <a href="/complaints">Complaints</a>
+            </div>
+            <div class="pair">
+                <i class="fa fa-book"></i>
+                <a href="/library">Library</a>
+            </div>
+            <div class="pair">
+                <i class="fa fa-briefcase"></i>
+                <a href="/opportunities">Oppurtunities</a>
+            </div>
+            <div class="pair">
+                <i class="fa fa-users"></i>
+                <a href="/alumni">Alumni Network</a>
+            </div>
+            <div class="logout">
+                <i class="fa fa-sign-out" style="color: #e65061;"></i>
+                <a href="/logout"  style="color: #e65061;">Logout</a>
+            </div>
+        </div>
+    </div> 
+
+
+    <!-- ---------------------------------------------------------------------------------------------------------------- -->
+    <div class="container">
+        <nav class="head">
+            <div class="lefticon">
+                <a class="LINK1" href="#">Student</a>
+            </div>
+            <div class="righticon">
+                <a href="#">
+                    <img width="50px" src="/Assests/Screenshot 2025-02-23 171952.png">
+                </a>
+            </div>
+        </nav>
+        <main>
+            <div class="main_con">
+                <div class="main_tit">
+                    <img src="/Assests/hello.svg">
+                    <div class="greeting">
+                        <h1>Hello Guest</h1>
+                        <p>Welcome to your dashboard</p>
+                    </div>
+                    <div class="date-display">
+                        <div class="date"></div>
+                    </div>
+                </div>
+                <div class="dashboard-container">
+                    <div class="todo-section">
+                        <div class="todo-header">
+                            <h2>My Tasks</h2>
+                            <div class="todo-input">
+                                <input type="text" id="taskInput" placeholder="Add a new task...">
+                                <button onclick="addTask()">Add Task</button>
+                            </div>
+                        </div>
+                        <ul id="taskList" class="task-list"></ul>
+                    </div>
+                    
+                    <div class="motivation-section">
+                        <div class="motivation-card" id="motivationCard">
+                            <div class="quote-emoji" id="quoteEmoji">🌟</div>
+                            <div class="quote-text" id="quoteText">Success is not final, failure is not fatal: it is the courage to continue that counts.</div>
+                            <button onclick="nextQuote()" class="refresh-btn">
+                                🔄 New Quote
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Update date
+            const dateElement = document.querySelector('.date-display .date');
+            dateElement.textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Update immediately and then every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script>
+    <script>
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+            
+            if (taskText === '') return;
+            
+            const taskList = document.getElementById('taskList');
+            const li = document.createElement('li');
+            
+            li.innerHTML = `
+                <span>${taskText}</span>
+                <div class="task-actions">
+                    <button class="complete-btn" onclick="toggleComplete(this)">✓</button>
+                    <button class="delete-btn" onclick="deleteTask(this)">×</button>
+                </div>
+            `;
+            
+            taskList.appendChild(li);
+            input.value = '';
+        }
+
+        function toggleComplete(button) {
+            const li = button.closest('li');
+            li.classList.toggle('completed');
+        }
+
+        function deleteTask(button) {
+            const li = button.closest('li');
+            li.remove();
+        }
+
+        // Allow adding tasks with Enter key
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+    </script>
+    <script>
+        // Get DOM elements
+        const addEventBtn = document.getElementById('addEventBtn');
+        const eventForm = document.getElementById('eventForm');
+        const submitEvent = document.getElementById('submitEvent');
+        const cancelEvent = document.getElementById('cancelEvent');
+        const timeSlots = document.querySelector('.time-slots');
+
+        // Toggle event form
+        addEventBtn.addEventListener('click', () => {
+            eventForm.classList.toggle('hidden');
+            addEventBtn.textContent = eventForm.classList.contains('hidden') ? '+ Add Event' : '- Close';
+        });
+
+        // Cancel event
+        cancelEvent.addEventListener('click', () => {
+            eventForm.classList.add('hidden');
+            addEventBtn.textContent = '+ Add Event';
+            clearForm();
+        });
+
+        // Submit event
+        submitEvent.addEventListener('click', () => {
+            const title = document.getElementById('eventTitle').value;
+            const location = document.getElementById('eventLocation').value;
+            const time = document.getElementById('eventTime').value;
+
+            if (!title || !location || !time) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Create new time slot
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot';
+            timeSlot.innerHTML = `
+                <div class="time">${formatTime(time)}</div>
+                <div class="event-card">
+                    <h3>${title}</h3>
+                    <p>${location}</p>
+                </div>
+            `;
+
+            // Insert the new time slot before the add event section
+            const addEventSection = document.querySelector('.add-event-section');
+            timeSlots.insertBefore(timeSlot, addEventSection);
+
+            // Clear and hide form
+            clearForm();
+            eventForm.classList.add('hidden');
+            addEventBtn.textContent = '+ Add Event';
+        });
+
+        // Helper function to clear form
+        function clearForm() {
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventLocation').value = '';
+            document.getElementById('eventTime').value = '';
+        }
+
+        // Helper function to format time
+        function formatTime(time) {
+            const [hours, minutes] = time.split(':');
+            const date = new Date();
+            date.setHours(hours);
+            date.setMinutes(minutes);
+            return date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+    </script>
+</body>
+</html>
